@@ -65,17 +65,16 @@ const Interview = () => {
     // Initialize localReport from sessionStorage if it exists for this interviewId
     const [localReport, setLocalReport] = useState(() => {
         if (interviewId) {
-            const cached = sessionStorage.getItem(`interview_report_${interviewId}`)
-            return cached ? JSON.parse(cached) : null
+            try {
+                const cached = sessionStorage.getItem(`interview_report_${interviewId}`)
+                return cached ? JSON.parse(cached) : null
+            } catch (error) {
+                console.error("Failed to parse cached interview report:", error)
+                return null
+            }
         }
         return null
     })
-
-    useEffect(() => {
-        if (interviewId) {
-            getReportById(interviewId)
-        }
-    }, [ interviewId ])
 
     // Update localReport and sessionStorage whenever the context's report is updated
     useEffect(() => {
