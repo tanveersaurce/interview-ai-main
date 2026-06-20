@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  # MongoDB Database
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # Backend Service
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/interviewAii
+      - GOOGLE_GENAI_API_KEY=AIzaSyCJUiOMHVayGjVQIvMcM29q_791VD6U9ug
+    depends_on:
+      - db
+
+  # Frontend Service
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
